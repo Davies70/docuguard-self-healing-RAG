@@ -38,6 +38,8 @@ import ReactMarkdown from 'react-markdown';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
+// const API_BASE_URL = 'https://3.68.108.28:8000';
+
 const SCENARIOS = [
   { id: 'stripe', name: 'Stripe API', detail: 'Charges vs PaymentIntent' },
   { id: 'react', name: 'React 18', detail: 'Event Delegation' },
@@ -708,6 +710,7 @@ export default function Home() {
                                 p: ({ node, ...props }) => (
                                   <p className='mb-3 last:mb-0' {...props} />
                                 ),
+                                // UPDATED CODE BLOCK RENDERER
                                 code: ({
                                   node,
                                   inline,
@@ -715,7 +718,16 @@ export default function Home() {
                                   children,
                                   ...props
                                 }: any) => {
-                                  if (inline) {
+                                  // Logic to distinguish inline code from block code
+                                  const match = /language-(\w+)/.exec(
+                                    className || '',
+                                  );
+                                  const isInline =
+                                    inline ||
+                                    (!match &&
+                                      !String(children).includes('\n'));
+
+                                  if (isInline) {
                                     return (
                                       <code
                                         className='bg-slate-200 text-slate-800 px-1.5 py-0.5 rounded font-mono text-xs font-semibold'
